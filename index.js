@@ -27,15 +27,28 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+
 app.use(express.json());
-app.use(cors({ origin: ['https://backend-log1.nodadogenhospital.com', 'http://localhost:5174'], credentials: true }));
+
+
+app.use(cors({
+  origin: [
+    "https://log1.nodadogenhospital.com"
+    
+  ],
+  credentials: true,
+}));
+
+// Cookie parser middleware
 app.use(cookieParser());
+
+// Your refresh token middleware
 app.use(refreshToken);
 
-// Serve static files from public directory
+// Serve static uploads directory
 app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 
-// Routes
+// API routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/listings", listingRoutes);
@@ -47,9 +60,11 @@ app.use("/api/admin/users", adminUserRoutes);
 app.use("/api", contractRoutes);
 app.use("/api/forecast", forecastRoutes);
 app.use("/api/top-items", topItemsRoutes);
-app.get("/", (req,res) => {
-  res.send("server running on port 3000");
-})
+
+// Basic root route test
+app.get("/", (req, res) => {
+  res.send("Server running on port " + PORT);
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
