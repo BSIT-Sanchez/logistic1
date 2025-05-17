@@ -29,12 +29,13 @@ export const generateTokenAndSetCookie = (res, user) => {
     });
 
     const options = {
-        expires: new Date(
-            Date.now() + 60 * 60 * 1000
-        ),
+        expires: new Date(Date.now() + 60 * 60 * 1000),
         maxAge: 60 * 60 * 1000,
-        httpOnly: true
-    };
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",   // only use secure cookies in production (HTTPS)
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",  // cross-site cookie needed in production
+      };
+      
 
     res.cookie('token', token, options);
 
